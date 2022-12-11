@@ -17,8 +17,8 @@ public class GameFrame extends JFrame {
 	private ImageIcon overredIcon = new ImageIcon("overred.jpg");
 	private JButton startBtn = new JButton(normalIcon);
 	private ScorePanel scorePanel = new ScorePanel();
-	private EditPanel editPanel = new EditPanel();
 	private WordVector wordVector = new WordVector();
+	private EditPanel editPanel = new EditPanel(wordVector);
 	private GamePanel gamePanel = new GamePanel(wordVector, scorePanel);
 
 	public GameFrame () {
