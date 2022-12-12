@@ -77,11 +77,13 @@ public class ScorePanel extends JPanel {
     }
 
     public void changeLife(int dlife) {
+        // 생명이 최대인 경우에서 추가하려는 경우
+        if (life == maxLife && dlife > 0) return;
+
         int i;
         life += dlife;
 
         if (life == 0) System.exit(0);
-        if (life == )
         lifeNameLabel.setText("생명: " + Integer.toString(life));
 
         for (i = 0; i < life; i++) {
