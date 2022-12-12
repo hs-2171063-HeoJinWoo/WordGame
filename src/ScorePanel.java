@@ -99,6 +99,10 @@ public class ScorePanel extends JPanel {
     public void start() {
         hungryBar.start();
     }
+
+    public void setDecrease(int n) {
+        hungryBar.setDecrease(n);
+    }
 }
 
 class BarLabel extends JLabel {
@@ -146,11 +150,21 @@ class DecreaseBarLabel extends BarLabel {
         th.start();
     }
 
+    public void setDecrease(int n) {
+        th.setDecrease(n);
+    }
+
     class Decrease extends Thread {
         private DecreaseBarLabel panel;
         private int decreaseValue = 2;
+        private int tempDecrease;
         public Decrease(DecreaseBarLabel panel) {
             this.panel = panel;
+        }
+
+        public void setDecrease(int n) {
+            tempDecrease = decreaseValue;
+            decreaseValue = n;
         }
 
         @Override

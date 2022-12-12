@@ -7,8 +7,10 @@ import java.io.File;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 public class GamePanel extends JPanel{
-    private JLabel textLabel = new JLabel("이곳을 보세요");
     private JTextField tf = new JTextField(20);
     private GroundPanel groundPanel = new GroundPanel();
     private WordVector wVector = null;
@@ -16,6 +18,8 @@ public class GamePanel extends JPanel{
     private FacePanel facePanel = null;
     private Vector<BaseLabel> target = new Vector<BaseLabel>();
     private FallWord th;
+    private boolean isPlaySound = true;
+    private int difficulty = 1;
 
     // 생성자 : tf 액션 이벤트 처리를 위해서 입력받는다.
     public GamePanel(WordVector wVector, ScorePanel scorePanel, FacePanel facePanel) {
@@ -39,16 +43,18 @@ public class GamePanel extends JPanel{
                 for (int i = 0; i < target.size(); i++) {
                     BaseLabel search = target.get(i);
                     if (search.getText().equals(input)) {
-
                         if (search instanceof BasicLabel) {
                             scorePanel.increaseScore(input.length());
+                            if (isPlaySound) audio("basic");
                         }
                         else if (search instanceof FoodLabel) {
                             scorePanel.increaseScore(input.length() / 2);
                             scorePanel.increaseHungry(input.length());
+                            if (isPlaySound) audio("eat");
                         }
                         else {
                             scorePanel.changeLife(1);
+                            if (isPlaySound) audio("heal");
                         }
                         facePanel.setHealFace();
                         invisibleLabel(search);
@@ -60,6 +66,26 @@ public class GamePanel extends JPanel{
                 groundPanel.repaint();
             }
         });
+    }
+
+    public void setPlaySound(boolean flag) {
+        isPlaySound = flag;
+    }
+
+    public void setDifficulty(int diff) {
+        difficulty = diff;
+    }
+
+    public void audio(String fileName) {
+        try {
+            File file = new File(fileName + ".wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(file));
+            clip.start();
+        } catch (Exception e) {
+            System.out.println(fileName + ": 찾을 수 없음.");
+            return;
+        }
     }
 
     private void invisibleLabel(BaseLabel lb) {
@@ -84,10 +110,13 @@ public class GamePanel extends JPanel{
         }
     }
 
-    public void setWord(String word) { textLabel.setText(word); }
     public void start() {
         th = new FallWord(groundPanel);
         th.start();
+    }
+
+    public void interrupt() {
+        th.interrupt();
     }
 
     class FallWord extends Thread {
@@ -106,7 +135,7 @@ public class GamePanel extends JPanel{
                 // 단어의 개수가 10개 미만일 때, 50%의 확률로 생성한다.
                 if (target.size() < 10 && r.nextInt(2) == 1) {
                     int newX, newY, speed, gen;
-                    speed = r.nextInt(3) + 1;
+                    speed = r.nextInt(3) + difficulty;
                     gen = r.nextInt(100) + 1;
                     word = wVector.getWord();
 
@@ -119,11 +148,11 @@ public class GamePanel extends JPanel{
 //                    }
 
                     // 테스트용 확률 조정
-                    if (gen <= 33) { // 생명 단어를 생성한다. 2%의 확률로 생성된다.
+                    if (gen <= 2) { // 생명 단어를 생성한다. 2%의 확률로 생성된다.
                         newLabel = new LifeLabel(word, speed);
-                    } else if (gen <= 66) { // 음식 단어를 생성한다. 10%의 확률로 생성된다.
+                    } else if (gen <= 22) { // 음식 단어를 생성한다. 20%의 확률로 생성된다.
                         newLabel = new FoodLabel(word, speed);
-                    } else { // 기본 단어를 생성한다. 88%의 확률로 생성한다.
+                    } else { // 기본 단어를 생성한다. 78%의 확률로 생성한다.
                         newLabel = new BasicLabel(word, speed);
                     }
 
@@ -154,7 +183,7 @@ public class GamePanel extends JPanel{
                 try {
                     sleep(200);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    interrupt();
                 }
             }
         }

@@ -50,4 +50,6 @@ public class WordVector {
             }
         }
     }
+
+    public Vector<String> getWordList() { return wVector; }
 }
