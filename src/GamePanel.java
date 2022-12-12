@@ -13,13 +13,15 @@ public class GamePanel extends JPanel{
     private GroundPanel groundPanel = new GroundPanel();
     private WordVector wVector = null;
     private ScorePanel scorePanel = null;
+    private FacePanel facePanel = null;
     private Vector<BaseLabel> target = new Vector<BaseLabel>();
     private FallWord th;
 
     // 생성자 : tf 액션 이벤트 처리를 위해서 입력받는다.
-    public GamePanel(WordVector wVector, ScorePanel scorePanel) {
+    public GamePanel(WordVector wVector, ScorePanel scorePanel, FacePanel facePanel) {
         this.wVector = wVector;
         this.scorePanel = scorePanel;
+        this.facePanel = facePanel;
 
         setLayout(new BorderLayout());
         JPanel inputPanel = new JPanel();
@@ -33,7 +35,6 @@ public class GamePanel extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 JTextField t = (JTextField)e.getSource();
                 String input = t.getText();
-                System.out.println("input: " + input);
 
                 for (int i = 0; i < target.size(); i++) {
                     BaseLabel search = target.get(i);
@@ -41,7 +42,6 @@ public class GamePanel extends JPanel{
 
                         if (search instanceof BasicLabel) {
                             scorePanel.increaseScore(input.length());
-
                         }
                         else if (search instanceof FoodLabel) {
                             scorePanel.increaseScore(input.length() / 2);
@@ -50,20 +50,10 @@ public class GamePanel extends JPanel{
                         else {
                             scorePanel.changeLife(1);
                         }
+                        facePanel.setHealFace();
                         invisibleLabel(search);
                         groundPanel.remove(search);
                         target.remove(search);
-
-                        System.out.print(input + ": 삭제");
-                        if (search instanceof BasicLabel) {
-                            System.out.println("/기본 단어");
-                        }
-                        else if (search instanceof FoodLabel) {
-                            System.out.println("/음식 단어");
-                        }
-                        else {
-                            System.out.println("/생명 단어");
-                        }
                     }
                 }
                 t.setText("");
@@ -152,21 +142,11 @@ public class GamePanel extends JPanel{
 
                     // 범위를 넘어간 경우
                     if (nextY >= panel.getHeight() && !(lb.getText().equals(""))) {
-                        // 콘솔 출력을 통한 검증 코드
-                        System.out.print(lb.getText() + ": 경계 도달-삭제");
-                        if (lb instanceof BasicLabel) {
-                            System.out.println("/기본 단어");
-                        }
-                        else if (lb instanceof FoodLabel) {
-                            System.out.println("/음식 단어");
-                        }
-                        else {
-                            System.out.println("/생명 단어");
-                        }
                         invisibleLabel(lb);
                         panel.remove(lb);
                         target.remove(i);
                         scorePanel.changeLife(-1);
+                        facePanel.setDamageFace();
                     }
                     else lb.setLocation(lb.getX(), nextY);
                 }

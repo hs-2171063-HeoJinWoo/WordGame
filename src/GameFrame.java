@@ -12,14 +12,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GameFrame extends JFrame {
-	private ImageIcon normalIcon = new ImageIcon("normal.jpg");
-	private ImageIcon pressedIcon = new ImageIcon("pressed.jpg");
-	private ImageIcon overredIcon = new ImageIcon("overred.jpg");
-	private JButton startBtn = new JButton(normalIcon);
+//	private ImageIcon normalIcon = new ImageIcon("normal.jpg");
+//	private ImageIcon pressedIcon = new ImageIcon("pressed.jpg");
+//	private ImageIcon overredIcon = new ImageIcon("overred.jpg");
+	private JButton startBtn = new JButton("start");
 	private ScorePanel scorePanel = new ScorePanel();
 	private WordVector wordVector = new WordVector();
 	private EditPanel editPanel = new EditPanel(wordVector);
-	private GamePanel gamePanel = new GamePanel(wordVector, scorePanel);
+	private FacePanel facePanel = new FacePanel();
+	private GamePanel gamePanel = new GamePanel(wordVector, scorePanel, facePanel);
 
 	public GameFrame () {
 		super("survive on island");
@@ -42,7 +43,8 @@ public class GameFrame extends JFrame {
 		JSplitPane vPane = new JSplitPane();
 		vPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		vPane.setDividerLocation(400);
-		vPane.setTopComponent(editPanel);
+//		vPane.setTopComponent(editPanel);
+		vPane.setTopComponent(facePanel);
 		vPane.setBottomComponent(scorePanel);
 
 		hPane.setLeftComponent(gamePanel);
@@ -72,8 +74,8 @@ public class GameFrame extends JFrame {
 		JToolBar tBar = new JToolBar();
 		getContentPane().add(tBar, BorderLayout.NORTH);
 		JButton breakBtn = new JButton("break");
-		startBtn.setPressedIcon(pressedIcon);
-		startBtn.setRolloverIcon(overredIcon);
+//		startBtn.setPressedIcon(pressedIcon);
+//		startBtn.setRolloverIcon(overredIcon);
 		startBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
