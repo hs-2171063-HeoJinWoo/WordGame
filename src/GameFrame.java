@@ -22,27 +22,28 @@ public class GameFrame extends JFrame {
 	private GamePanel gamePanel = new GamePanel(wordVector, scorePanel);
 
 	public GameFrame () {
-		super("게임");
+		super("survive on island");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(800, 600);
-		makeMenu();
+		setSize(1280, 960);
+//		makeMenu();
 		makeToolbar();
 		makeSplitPane();
 
 		setVisible(true);
+		setResizable(false);
 	}
 
 	private void makeSplitPane() {
 		JSplitPane hPane = new JSplitPane();
 		hPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		hPane.setDividerLocation(500);
+		hPane.setDividerLocation(900);
 		getContentPane().add(hPane, BorderLayout.CENTER);
 
 		JSplitPane vPane = new JSplitPane();
 		vPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		vPane.setDividerLocation(300);
-		vPane.setTopComponent(scorePanel);
-		vPane.setBottomComponent(editPanel);
+		vPane.setDividerLocation(400);
+		vPane.setTopComponent(editPanel);
+		vPane.setBottomComponent(scorePanel);
 
 		hPane.setLeftComponent(gamePanel);
 		hPane.setRightComponent(vPane);
@@ -76,8 +77,9 @@ public class GameFrame extends JFrame {
 		startBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String word = wordVector.getWord();
-				gamePanel.setWord(word);
+//				String word = wordVector.getWord();
+				gamePanel.start();
+				scorePanel.start();
 			}
 		});
 		tBar.add(startBtn);
